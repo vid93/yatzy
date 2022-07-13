@@ -1,0 +1,28 @@
+.app {
+  text-align: center;
+}
+
+.dice {
+  position: relative;
+  top: 10%;
+  height: 70%;
+  width: 10%;
+  border: 1px solid black;
+  background-color: aliceblue;
+}
+
+.dice-wrapper {
+  margin: auto;
+  height: 5em;
+  width: 50%;
+  background-color: blueviolet;
+  display: flex;
+  justify-content: space-around;
+}
+
+.scoreBoard {
+  border: solid black 1px;
+  margin-top: 5%;
+  height: 20em;
+}
+
