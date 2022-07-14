@@ -8,6 +8,12 @@ const DiceHolder = ({
   newDice,
   rollsLeft,
   setRollsLeft,
+  diceImgs,
+  fDiceImgs,
+  diceImg,
+  setDiceImg,
+  round,
+  setRound,
 }) => {
   const reRoll = () => {
     newDice.forEach((die, i) => {
@@ -29,6 +35,12 @@ const DiceHolder = ({
             index={i}
             setFrozenDice={setFrozenDice}
             frozenDice={frozenDice}
+            diceImgs={diceImgs}
+            fDiceImgs={fDiceImgs}
+            diceImg={diceImg}
+            setDiceImg={setDiceImg}
+            round={round}
+            setRound={setRound}
           />
         );
       })}

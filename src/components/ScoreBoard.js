@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Score from "./Score";
 
 import {
@@ -20,7 +20,9 @@ const ScoreBoard = ({
   setRollsLeft,
   setFrozenDice,
   setShowBtn,
-  showBtn
+  showBtn,
+  round,
+  setRound,
 }) => {
   const defaultScoreItems = [
     {
@@ -67,16 +69,32 @@ const ScoreBoard = ({
   ];
 
   const [scores, setScores] = useState(defaultScoreItems);
-  const [round, setRound] = useState(1);
-  
+
+  const [highScore, setHighScore] = useState(
+    JSON.parse(localStorage.getItem("highscores")) || []
+  );
+
+  const saveToLocalStorage = () => {
+    if (totalScore > highScore) {
+      localStorage.setItem("highScores", JSON.stringify(totalScore));
+      setHighScore(totalScore);
+    }
+  };
+
+  useEffect(() => {
+    saveToLocalStorage();
+    // eslint-disable-next-line
+  }, [highScore]);
+
   const newGame = () => {
-    setDice(Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1))
-    setRound(1)
-    setFrozenDice([])
-    setRollsLeft(2)
-    setTotalScore(0)
-    setScores(defaultScoreItems)
-  }
+    setDice(Array.from({ length: 5 }, () => Math.floor(Math.random() * 6) + 1));
+    setRound(1);
+    setFrozenDice([]);
+    setRollsLeft(2);
+    setTotalScore(0);
+    setScores(defaultScoreItems);
+    setShowBtn(false);
+  };
 
   const newRound = () => {
     setRound((prev) => prev + 1);
@@ -85,9 +103,10 @@ const ScoreBoard = ({
     setRollsLeft(2);
     if (round === 13) {
       for (var i in scores) {
-        if (scores[i].score === null) {
-          setShowBtn(true)
-          setRollsLeft(0)
+        if (scores[i].score !== null) {
+          setShowBtn(true);
+          setRollsLeft(0);
+          saveToLocalStorage();
         }
       }
     }
@@ -180,13 +199,16 @@ const ScoreBoard = ({
 
   return (
     <div className="scoreBoard">
-      <button hidden={showBtn === false} onClick={newGame} >New Game</button>
-      <p>{totalScore}</p>
+      <div className="scores">
+        <h3 className="total"> Total Score: {totalScore}</h3>
+        <h3 className="high" hidden={highScore <= 0}>
+          High Score {highScore}
+        </h3>
+      </div>
       {scores.map((item, i) => {
         return (
           <Score
             key={i}
-            func={item.func}
             name={item.name}
             description={item.description}
             score={item.score}
@@ -194,6 +216,9 @@ const ScoreBoard = ({
           />
         );
       })}
+      <button hidden={showBtn === false} onClick={newGame} className="newGame">
+        New Game
+      </button>
     </div>
   );
 };
